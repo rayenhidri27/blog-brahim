@@ -1,0 +1,26 @@
+# Example 1: Block only Googlebot
+User-agent: Googlebot
+Disallow: /
+
+# Example 2: Block Googlebot and Adsbot
+User-agent: Googlebot
+User-agent: AdsBot-Google
+Disallow: /
+
+# Example 3: Block all but AdsBot crawlers
+User-agent: *
+Disallow: /
+
+
+# Example 4: bloquer AdsBot-Google et autoriser tous les robots
+User-agent: *
+Allow: /
+User-agent: AdsBot-Google
+Disallow: /
+
+# Example 4: autoriser googlebot sur tt le site sauf le dossier config
+User-agent: googlebot
+Disallow: /config/
+
+
+Sitemap: http://www.example.com/sitemap.xml
