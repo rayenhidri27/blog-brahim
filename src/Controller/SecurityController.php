@@ -19,28 +19,27 @@ class SecurityController extends AbstractController
     {
         $this->manager = $manager;
     }
-    
+
     /**
-     * @Route("/register", name="security_register")
+     * @Route("/register/{user_type}", name="security_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder): Response
+    public function resgister(Request $request, UserPasswordEncoderInterface $encoder, $user_type): Response
     {
         $user = new User();
+
+        if ($user_type === "admin" && $this->isGranted('ROLE_SUPER_ADMIN')) {
+            $user->setRoles(['ROLE_ADMIN']);
+        }
         $form = $this->createForm(RegisterType::class, $user);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password_hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password_hash);
-
-            // $password_hash = $passwordHasher->hashPassword($user, $user->getPassword());
-            // $user->setPassword($password_hash);
-
-            //$user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
- 
             $this->manager->persist($user);
             $this->manager->flush();
-            return $this->redirectToRoute("home");
+            return $this->redirectToRoute("security_login");
         }
 
         return $this->render('security/index.html.twig', [
